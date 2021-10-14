@@ -10,16 +10,27 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import Divider from "@mui/material/Divider";
-import InboxIcon from "@mui/icons-material/Inbox";
-import DraftsIcon from "@mui/icons-material/Drafts";
+import { makeStyles } from "@mui/styles";
+
+const useStyles = makeStyles({
+  error: {
+    backgroundColor: "tomato",
+  },
+  success: {
+    backgroundColor: "green",
+  },
+});
 
 const GeneralKnowledge = () => {
   const [questions, setQuestions] = useState(null);
   const [loading, setLoading] = useState(false);
   const [level, setLevel] = useState("easy");
+  const [itemSelected, setItemSelected] = useState({
+    id: "",
+  });
+
+  const style = useStyles();
 
   const fetchApi = async () => {
     setLoading(true);
@@ -58,53 +69,50 @@ const GeneralKnowledge = () => {
         </select>
       </label>
 
-      <Card sx={{ maxWidth: 345 }}>
-        <CardContent>
-          <Typography gutterBottom variant="h4" component="div">
-            Q {i + 1}: <strong>{item.question}</strong>
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Lizards are a widespread group of squamate reptiles, with over 6,000
-            species, ranging across all continents except Antarctica
-          </Typography>
-
-          <List component="nav" aria-label="main mailbox folders">
-            <ListItemButton
-            //   selected={selectedIndex === 0}
-            //   onClick={(event) => handleListItemClick(event, 0)}
-            >
-              <ListItemText primary="Inbox" />
-            </ListItemButton>
-            <ListItemButton
-            //   selected={selectedIndex === 1}
-            //   onClick={(event) => handleListItemClick(event, 1)}
-            >
-              <ListItemText primary="Drafts" />
-            </ListItemButton>
-          </List>
-        </CardContent>
-      </Card>
-
       {loading ? (
         <div style={{ marginTop: "5em" }}>Loading.......</div>
       ) : (
-        <div>
+        <div style={{ marginLeft: "25em" }}>
           {questions &&
-            questions.results.map((item, i) => {
+            questions.results.map((item, index) => {
               return (
                 <div>
-                  <p>
-                    Q {i + 1}: <strong>{item.question}</strong>
-                  </p>
+                  <Card sx={{ maxWidth: 600 }}>
+                    <CardContent>
+                      <Typography gutterBottom variant="h8" component="div">
+                        Q {index + 1}: <strong>{item.question}</strong>
+                      </Typography>
 
-                  <div>
-                    <ul>
-                      <li> {item.correct_answer} </li>
-                      {item.incorrect_answers.map((incorr, i) => {
-                        return <li>{incorr}</li>;
-                      })}
-                    </ul>
-                  </div>
+                      <List component="nav" aria-label="main mailbox folders">
+                        {item.incorrect_answers.map((incorr, i) => {
+                          return (
+                            <ListItemButton color="error">
+                              <ListItemText
+                                className={
+                                  itemSelected.id === index ? style.error : ""
+                                }
+                                onClick={() => setItemSelected({ id: index })}
+                              >
+                                {incorr}
+                              </ListItemText>
+                            </ListItemButton>
+                          );
+                        })}
+                        <ListItemButton
+                        //   selected={selectedIndex === 1}
+                        //   onClick={(event) => handleListItemClick(event, 1)}
+                        >
+                          <ListItemText
+                            className={
+                              itemSelected.id === index ? style.success : ""
+                            }
+                            primary={item.correct_answer}
+                            onClick={() => setItemSelected({ id: index })}
+                          />
+                        </ListItemButton>
+                      </List>
+                    </CardContent>
+                  </Card>
                 </div>
               );
             })}
@@ -115,3 +123,20 @@ const GeneralKnowledge = () => {
 };
 
 export default GeneralKnowledge;
+
+{
+  /* <div>
+<p>
+  Q {i + 1}: <strong>{item.question}</strong>
+</p>
+
+<div>
+  <ul>
+    <li> {item.correct_answer} </li>
+    {item.incorrect_answers.map((incorr, i) => {
+      return <li>{incorr}</li>;
+    })}
+  </ul>
+</div>
+</div> */
+}
