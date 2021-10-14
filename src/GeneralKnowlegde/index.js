@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
 
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
+
 import Typography from "@mui/material/Typography";
 
-import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
@@ -47,6 +44,7 @@ const GeneralKnowledge = () => {
 
   useEffect(() => {
     fetchApi();
+    setItemSelected({ id: "" });
   }, [level]);
 
   const handleChange = (e) => {
@@ -98,10 +96,7 @@ const GeneralKnowledge = () => {
                             </ListItemButton>
                           );
                         })}
-                        <ListItemButton
-                        //   selected={selectedIndex === 1}
-                        //   onClick={(event) => handleListItemClick(event, 1)}
-                        >
+                        <ListItemButton>
                           <ListItemText
                             className={
                               itemSelected.id === index ? style.success : ""
@@ -124,19 +119,3 @@ const GeneralKnowledge = () => {
 
 export default GeneralKnowledge;
 
-{
-  /* <div>
-<p>
-  Q {i + 1}: <strong>{item.question}</strong>
-</p>
-
-<div>
-  <ul>
-    <li> {item.correct_answer} </li>
-    {item.incorrect_answers.map((incorr, i) => {
-      return <li>{incorr}</li>;
-    })}
-  </ul>
-</div>
-</div> */
-}
